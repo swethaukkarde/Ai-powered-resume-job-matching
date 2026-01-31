@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h2 class="page-title">Job Seeker Dashboard</h2>
+
+<!-- ATS SECTION -->
+<div class="form-card">
+    <h3>Upload Resume</h3>
+    <p class="sub-text">
+        Upload your resume to check ATS compatibility score
+    </p>
+
+    <input type="file" accept=".pdf,.doc,.docx">
+
+    <button class="btn-primary" onclick="checkATS()">
+        Check ATS Score
+    </button>
+
+    <div id="atsResult" style="display:none; margin-top:15px;">
+        <h4>Your ATS Score</h4>
+
+        <div class="progress-bar">
+            <div id="progressFill"></div>
+        </div>
+
+        <p id="atsText"></p>
+    </div>
+</div>
+
+<!-- JOBS -->
+<h2 id="jobsTitle" class="page-title" style="display:none;">
+    Available Jobs
+</h2>
+<div id="jobList"></div>
+
+<!-- APPLY SECTION -->
+<div id="applySection" class="form-card" style="display:none;">
+    <h3>Apply for Job</h3>
+    <p class="sub-text">
+        Upload your resume to extract skills and generate interview questions
+    </p>
+
+    <input type="file" accept=".pdf,.doc,.docx">
+    <button class="btn-primary" onclick="extractSkills()">
+        Extract Skills
+    </button>
+
+    <div id="skillsOutput"></div>
+</div>
+
+<script>
+function checkATS() {
+    const score = Math.floor(Math.random() * 30) + 70;
+
+    document.getElementById("atsResult").style.display = "block";
+    document.getElementById("progressFill").style.width = score + "%";
+    document.getElementById("progressFill").innerText = score + "%";
+
+    document.getElementById("atsText").innerText =
+        "ATS analysis completed. Jobs are displayed below.";
+
+    document.getElementById("jobsTitle").style.display = "block";
+    loadJobs();
+}
+
+function loadJobs() {
+    const jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+    const jobList = document.getElementById("jobList");
+    jobList.innerHTML = "";
+
+    if (jobs.length === 0) {
+        jobList.innerHTML =
+            "<p style='text-align:center;'>No jobs posted yet.</p>";
+        return;
+    }
+
+    jobs.forEach(job => {
+        const div = document.createElement("div");
+        div.className = "job-card";
+        div.innerHTML = `
+            <h3>${job.title}</h3>
+            <p><strong>Location:</strong> ${job.location}</p>
+            <p><strong>Salary:</strong> ${job.salary}</p>
+            <p><strong>Skills:</strong> ${job.skills}</p>
+            <button class="btn-primary" onclick="openApply()">Apply</button>
+        `;
+        jobList.appendChild(div);
+    });
+}
+
+function openApply() {
+    window.location.href = "apply.html";
+}
+
+
+
+/* DEMO AI SKILL EXTRACTION */
+function extractSkills() {
+    const skills = ["Python", "Java", "SQL"]; // demo extracted skills
+
+    const questions = {
+        Python: [
+            "What is Python?",
+            "Explain lists and tuples",
+            "What are decorators?",
+            "Explain OOP in Python",
+            "What is exception handling?"
+        ],
+        Java: [
+            "What is JVM?",
+            "Explain OOP concepts",
+            "Difference between abstract class and interface",
+            "What is multithreading?",
+            "Explain exception handling"
+        ],
+        SQL: [
+            "What is SQL?",
+            "Difference between WHERE and HAVING",
+            "What are joins?",
+            "Explain primary key",
+            "What is normalization?"
+        ]
+    };
+
+    let output = "<h4>Extracted Skills & Interview Questions</h4>";
+
+    skills.forEach(skill => {
+        output += `<h5>${skill}</h5><ul>`;
+        questions[skill].forEach(q => {
+            output += `<li>${q}</li>`;
+        });
+        output += "</ul>";
+    });
+
+    document.getElementById("skillsOutput").innerHTML = output;
+}
+</script>
+
+</body>
+</html>

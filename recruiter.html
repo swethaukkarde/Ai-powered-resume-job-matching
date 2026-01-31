@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recruiter Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h2 class="page-title">Recruiter Dashboard</h2>
+
+<!-- ADD / EDIT JOB FORM -->
+<div class="form-card">
+    <h3 id="formTitle">Add Job</h3>
+
+    <input id="jobTitle" placeholder="Job Title">
+    <input id="jobLocation" placeholder="Location">
+    <input id="jobSalary" placeholder="Salary Range">
+    <input id="jobSkills" placeholder="Required Skills">
+    <input id="jobContact" placeholder="Contact Email">
+
+    <button class="btn-primary" onclick="saveJob()">Save Job</button>
+</div>
+
+<!-- POSTED JOBS -->
+<h2 class="page-title">Posted Jobs</h2>
+<div id="jobList"></div>
+
+<script>
+let editIndex = null;
+
+/* SAVE OR UPDATE JOB */
+function saveJob() {
+    const job = {
+        title: jobTitle.value,
+        location: jobLocation.value,
+        salary: jobSalary.value,
+        skills: jobSkills.value,
+        contact: jobContact.value
+    };
+
+    let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+
+    if (editIndex === null) {
+        jobs.push(job);
+        alert("Job posted successfully!");
+    } else {
+        jobs[editIndex] = job;
+        alert("Job updated successfully!");
+        editIndex = null;
+        document.getElementById("formTitle").innerText = "Add Job";
+    }
+
+    localStorage.setItem("jobs", JSON.stringify(jobs));
+    clearForm();
+    loadJobs();
+}
+
+/* LOAD JOBS */
+function loadJobs() {
+    const jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+    const list = document.getElementById("jobList");
+    list.innerHTML = "";
+
+    if (jobs.length === 0) {
+        list.innerHTML = "<p style='text-align:center;'>No jobs posted yet.</p>";
+        return;
+    }
+
+    jobs.forEach((job, index) => {
+        const div = document.createElement("div");
+        div.className = "job-card";
+        div.innerHTML = `
+            <h3>${job.title}</h3>
+            <p><strong>Location:</strong> ${job.location}</p>
+            <p><strong>Salary:</strong> ${job.salary}</p>
+            <p><strong>Skills:</strong> ${job.skills}</p>
+            <p><strong>Contact:</strong> ${job.contact}</p>
+
+            <button class="btn-secondary" onclick="editJob(${index})">Edit</button>
+            <button class="btn-outline" onclick="deleteJob(${index})">Delete</button>
+        `;
+        list.appendChild(div);
+    });
+}
+
+/* EDIT JOB */
+function editJob(index) {
+    const jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+    const job = jobs[index];
+
+    jobTitle.value = job.title;
+    jobLocation.value = job.location;
+    jobSalary.value = job.salary;
+    jobSkills.value = job.skills;
+    jobContact.value = job.contact;
+
+    editIndex = index;
+    document.getElementById("formTitle").innerText = "Edit Job";
+}
+
+/* DELETE JOB */
+function deleteJob(index) {
+    let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+    if (confirm("Are you sure you want to delete this job?")) {
+        jobs.splice(index, 1);
+        localStorage.setItem("jobs", JSON.stringify(jobs));
+        loadJobs();
+    }
+}
+
+/* CLEAR FORM */
+function clearForm() {
+    jobTitle.value = "";
+    jobLocation.value = "";
+    jobSalary.value = "";
+    jobSkills.value = "";
+    jobContact.value = "";
+}
+
+loadJobs();
+</script>
+
+</body>
+</html>

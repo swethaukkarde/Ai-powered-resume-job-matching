@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Extracted Skills</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h2 class="page-title">Extracted Skills</h2>
+
+<div class="form-card">
+    <p class="sub-text">
+        Skills extracted from your resume
+    </p>
+
+    <ul id="skillsList"></ul>
+
+    <button class="btn-primary" onclick="goToMCQ()">
+        Start Skill Assessment
+    </button>
+</div>
+
+<script>
+const skills = ["Python", "Java", "SQL"]; // demo AI output
+
+const list = document.getElementById("skillsList");
+skills.forEach(skill => {
+    const li = document.createElement("li");
+    li.innerText = skill;
+    list.appendChild(li);
+});
+
+function goToMCQ() {
+    localStorage.setItem("skills", JSON.stringify(skills));
+    window.location.href = "mcq.html";
+}
+</script>
+
+</body>
+</html>

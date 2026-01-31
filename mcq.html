@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Skill Assessment</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h2 class="page-title">Skill Assessment Test</h2>
+
+<div id="mcqContainer"></div>
+
+<div style="text-align:center; margin:30px;">
+    <button class="btn-primary" onclick="submitTest()">Submit Test</button>
+</div>
+
+<div id="result" class="form-card" style="display:none; text-align:center;">
+    <h3>Test Result</h3>
+    <p id="scoreText"></p>
+</div>
+
+<script>
+const skills = JSON.parse(localStorage.getItem("skills")) || [];
+
+const mcqs = {
+    Python: [
+        ["Python is?", ["Language", "OS", "Browser", "DB"], 0],
+        ["Mutable type?", ["Tuple", "List", "String", "Int"], 1],
+        ["Used for packages?", ["pip", "npm", "git", "java"], 0],
+        ["OOP keyword?", ["def", "class", "print", "len"], 1],
+        ["File write mode?", ["r", "a", "w", "x"], 2]
+    ],
+    Java: [
+        ["JVM stands for?", ["Java VM", "Java Virtual Machine", "JS VM", "None"], 1],
+        ["Inheritance keyword?", ["this", "super", "extends", "final"], 2],
+        ["Thread interface?", ["Runnable", "Scanner", "System", "Math"], 0],
+        ["Entry method?", ["main()", "run()", "start()", "init()"], 0],
+        ["OOP concept?", ["Loop", "Class", "Compiler", "API"], 1]
+    ],
+    SQL: [
+        ["SQL full form?", ["Structured Query Language", "Simple Query", "Server Query", "None"], 0],
+        ["Select all?", ["ALL", "*", "ROWS", "DATA"], 1],
+        ["Unique identifier?", ["Foreign key", "Primary key", "Index", "View"], 1],
+        ["Filter rows?", ["WHERE", "GROUP", "ORDER", "HAVING"], 0],
+        ["Join tables?", ["JOIN", "MERGE", "LINK", "UNION"], 0]
+    ]
+};
+
+const container = document.getElementById("mcqContainer");
+let totalQuestions = 0;
+
+skills.forEach(skill => {
+    container.innerHTML += `<h3>${skill}</h3>`;
+
+    mcqs[skill].forEach((q, i) => {
+        totalQuestions++;
+
+        container.innerHTML += `
+            <div class="job-card">
+                <p><strong>${q[0]}</strong></p>
+                ${q[1].map((opt, idx) => `
+                    <label>
+                        <input type="radio" name="${skill}_${i}" value="${idx}">
+                        ${opt}
+                    </label><br>
+                `).join("")}
+            </div>
+        `;
+    });
+});
+
+function submitTest() {
+    let score = 0;
+
+    skills.forEach(skill => {
+        mcqs[skill].forEach((q, i) => {
+            const selected = document.querySelector(
+                `input[name="${skill}_${i}"]:checked`
+            );
+            if (selected && parseInt(selected.value) === q[2]) {
+                score++;
+            }
+        });
+    });
+
+    const percentage = Math.round((score / totalQuestions) * 100);
+
+    document.getElementById("result").style.display = "block";
+    document.getElementById("scoreText").innerHTML = `
+        You scored <strong>${score}</strong> out of <strong>${totalQuestions}</strong><br>
+        Percentage: <strong>${percentage}%</strong><br><br>
+        ${
+            percentage >= 70
+            ? "🎉 Congratulations! You passed the assessment."
+            : "⚠️ You need improvement. Practice and try again."
+        }
+    `;
+
+    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+}
+</script>
+
+</body>
+</html>
