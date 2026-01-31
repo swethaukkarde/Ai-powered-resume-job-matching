@@ -12,7 +12,7 @@ A prototype AI-powered resume and job matching platform designed to demonstrate 
 - AI-based skill gap analysis for rejected candidates
 - Face-authenticated skill verification tests
 - Bias-aware and skill-focused hiring process
-- 
+  
 ## 🧠 Technical Stack
 **Frontend:** React.js, CSS, Axios  
 **Backend:** Node.js, Express.js  
@@ -29,7 +29,7 @@ A prototype AI-powered resume and job matching platform designed to demonstrate 
 5. Resume–JD similarity is computed  
 6. Candidates are ranked using LightGBM  
 7. AI Gap Analysis is generated for transparency
-8. 
+   
 ## 🎯 Impact
 - 80% faster hiring
 - Fair evaluation across languages
@@ -40,7 +40,7 @@ A prototype AI-powered resume and job matching platform designed to demonstrate 
 - Smart recruitment platforms
 - Hackathons and academic projects
 - Fair and global hiring systems
-- 
+  
 ## 📁 Project Structure
 
 ai-job-platform/
@@ -70,3 +70,4 @@ This prototype represents the foundation of an AI-powered hiring system with:
 - Resume–job matching logic (extensible)
 - AI-based skill evaluation (prototype stage)
 - Scope for future integration of NLP and ML models
+
